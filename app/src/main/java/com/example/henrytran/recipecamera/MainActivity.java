@@ -12,10 +12,12 @@ import android.util.Log;
 import com.clarifai.api.ClarifaiClient;
 import com.clarifai.api.RecognitionRequest;
 import com.clarifai.api.RecognitionResult;
+import com.clarifai.api.Tag;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private final ClarifaiClient clarifaiClient = new ClarifaiClient(BuildConfig.CLARIFAI_CLIENT_ID,
             BuildConfig.CLARIFAI_CLIENT_SECRET);
+    private ArrayList<String> ingredientList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         protected void onPostExecute (RecognitionResult result) {
-
+                            //add the recognized ingredients to the ingredients list
+                            for (Tag tag : result.getTags()) {
+                                ingredientList.add(tag.getName());
+                            }
                         }
                     }.execute(bitmap);
                 } catch (FileNotFoundException e) {
