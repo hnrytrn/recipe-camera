@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,22 @@ public class RecipeActivityFragment extends Fragment {
             ingredients = intent.getStringArrayExtra("ingredients");
         }
         return inflater.inflate(R.layout.fragment_recipe, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadRecipes();
+    }
+
+    private void loadRecipes() {
+        if (ingredients.length == 0) {
+            //No ingredients found in picture
+            Toast.makeText(getContext(), "No ingredients found", Toast.LENGTH_SHORT).show();
+        } else {
+            FetchRecipeTask fetchRecipeTask = new FetchRecipeTask();
+            fetchRecipeTask.execute(ingredients);
+        }
     }
 
     private class FetchRecipeTask extends AsyncTask<String, Void, ArrayList<Recipe>> {
