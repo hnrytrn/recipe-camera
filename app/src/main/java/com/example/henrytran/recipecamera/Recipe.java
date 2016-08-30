@@ -7,32 +7,23 @@ import android.os.Parcelable;
  * Created by henrytran on 16-08-28.
  */
 public class Recipe implements Parcelable{
-    private int id;
+    private String id;
     private String title;
     private String image;
-    private int usedIngredients;
-    private int missedIngredients;
-    private int likes;
 
-    public Recipe (int id, String title, String image, int usedIngredients, int missedIngredients, int likes) {
+    public Recipe (String id, String title, String image) {
         this.id = id;
         this.title = title;
         this.image = image;
-        this.usedIngredients = usedIngredients;
-        this.missedIngredients = missedIngredients;
-        this.likes = likes;
     }
 
     protected Recipe(Parcel in) {
-        String[] data = new String[6];
+        String[] data = new String[3];
 
         in.readStringArray(data);
-        this.id = Integer.parseInt(data[0]);
+        this.id = data[0];
         this.title = data[1];
         this.image = data[2];
-        this.usedIngredients = Integer.parseInt(data[3]);
-        this.missedIngredients = Integer.parseInt(data[4]);
-        this.likes = Integer.parseInt(data[5]);
     }
 
     @Override
@@ -43,12 +34,9 @@ public class Recipe implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {
-            String.valueOf(this.id),
+            this.id,
             this.title,
             this.image,
-            String.valueOf(this.usedIngredients),
-            String.valueOf(this.missedIngredients),
-            String.valueOf(this.likes)
         });
     }
 

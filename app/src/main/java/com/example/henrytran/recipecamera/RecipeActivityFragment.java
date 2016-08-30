@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 public class RecipeActivityFragment extends Fragment {
 
     private String[] ingredients;
+    private static RecipeAdapter mRecipeAdapter;
 
     public RecipeActivityFragment() {
     }
@@ -33,6 +37,14 @@ public class RecipeActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
+
+        mRecipeAdapter = new RecipeAdapter(getActivity(), new ArrayList<Recipe>());
+
+        //set recipe adapter to list view
+        ListView listView = (ListView)  rootView.findViewById(R.id.listview_recipe);
+        listView.setAdapter(mRecipeAdapter);
+
         // Get the ingredients list from the intent
         Intent intent = getActivity().getIntent();
         if (intent != null && intent.hasExtra("ingredients")) {
@@ -46,7 +58,32 @@ public class RecipeActivityFragment extends Fragment {
         private final String LOG_TAG = FetchRecipeTask.class.getSimpleName();
 
         // Parse the recipe data from the JSON string
+        private ArrayList<Recipe> getRecipeDataFromJson(String recipeJsonStr)
+            throws JSONException {
+            //JSON objects that need to be extracted
+            final String RECIPES = "recipes";
+            final String TITLE = "title";
+            final String ID = "recipe_id";
+            final String IMAGE = "image_url";
 
+            JSONObject recipeJsonObj = new JSONObject(recipeJsonStr);
+            JSONArray recipesJson = recipeJsonObj.getJSONArray(RECIPES);
+
+            int recipesLength = recipesJson.length();
+
+            ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+            //add Recipes to the recipe list
+            for (int i = 0; i < recipesLength; i++) {
+                JSONObject recipe = recipesJson.getJSONObject(i);
+
+                String title = recipe.getString(TITLE);
+                String id = recipe.getString(ID);
+                String image = recipe.getString(IMAGE);
+
+                recipeList.add(new Recipe(id, title, image));
+            }
+            return recipeList;
+        }
 
         @Override
         protected ArrayList<Recipe> doInBackground(String... params) {
@@ -59,7 +96,9 @@ public class RecipeActivityFragment extends Fragment {
                 final String FOOD2FORK_BASE_URL = "http://food2fork.com/api/search";
                 final String API_PARAM = "key";
                 final String SEARCH_PARAM = "q";
+                final String SORT_PARAM = "sort";
 
+                String sort = "r"; //sort based off of rating
                 //build the ingredient search query
                 StringBuilder ingredientsStrBuilder = new StringBuilder();
                 for (String ingredient : ingredients) {
@@ -71,6 +110,7 @@ public class RecipeActivityFragment extends Fragment {
                 Uri builtUri = Uri.parse(FOOD2FORK_BASE_URL).buildUpon()
                         .appendQueryParameter(API_PARAM, BuildConfig.FOOD2FORK_API_KEY)
                         .appendQueryParameter(SEARCH_PARAM, ingredientQuery)
+                        .appendQueryParameter(SORT_PARAM, sort)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -112,12 +152,26 @@ public class RecipeActivityFragment extends Fragment {
 
             try {
                 return  getRecipeDataFromJson(recipesJsonStr);
-            } catch (JSONException e) {
+            } catch (JSONException e){
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Recipe> recipes) {
+            if (!recipes.isEmpty()) {
+                mRecipeAdapter.clear();
+
+                //add recipes to the recipe adapter
+                Recipe[] recipeArr = new Recipe[recipes.size()];
+                recipes.toArray(recipeArr);
+                for (Recipe recipe : recipeArr) {
+                    mRecipeAdapter.add(recipe);
+                }
+            }
         }
     }
 }
