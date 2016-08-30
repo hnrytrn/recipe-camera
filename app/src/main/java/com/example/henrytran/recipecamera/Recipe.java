@@ -7,9 +7,9 @@ import android.os.Parcelable;
  * Created by henrytran on 16-08-28.
  */
 public class Recipe implements Parcelable{
-    private String id;
-    private String title;
-    private String image;
+    String id;
+    String title;
+    String image;
 
     public Recipe (String id, String title, String image) {
         this.id = id;
