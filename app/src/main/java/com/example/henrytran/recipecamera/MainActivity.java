@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private final ClarifaiClient clarifaiClient = new ClarifaiClient(BuildConfig.CLARIFAI_CLIENT_ID,
             BuildConfig.CLARIFAI_CLIENT_SECRET);
-    private ArrayList<String> ingredientList = new ArrayList<>();
+    private ArrayList<String> ingredientList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }.execute(bitmap);
+
+                    // Create intent for the recipe activity
+                    String[] ingredients = new String[ingredientList.size()];
+                    ingredients = ingredientList.toArray(ingredients);
+                    Intent recipeIntent = new Intent(this, RecipeActivity.class)
+                            .putExtra("ingredients", ingredients);
+
+                    startActivity(recipeIntent);
+
                 } catch (FileNotFoundException e) {
                     Log.e(LOG_TAG, e.getMessage());
                 }
