@@ -64,6 +64,9 @@ public class RecipeActivityFragment extends Fragment {
         if (ingredients.length == 0) {
             //No ingredients found in picture
             Toast.makeText(getContext(), "No ingredients found", Toast.LENGTH_SHORT).show();
+            // Return to main activity
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            startActivity(intent);
         } else {
             FetchRecipeTask fetchRecipeTask = new FetchRecipeTask();
             fetchRecipeTask.execute(ingredients);

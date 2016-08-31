@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                             byte[] jpeg = outputStream.toByteArray();
 
                             //send jpeg to clarifai client and return result
-                            return clarifaiClient.recognize(new RecognitionRequest(jpeg).setModel("food-item-v1.0")).get(0);
+                            return clarifaiClient.recognize(new RecognitionRequest(jpeg).setModel("food-items-v1.0")).get(0);
                         }
 
                         @Override
@@ -70,16 +70,16 @@ public class MainActivity extends AppCompatActivity {
                             for (Tag tag : result.getTags()) {
                                 ingredientList.add(tag.getName());
                             }
+
+                            // Create intent for the recipe activity
+                            String[] ingredients = new String[ingredientList.size()];
+                            ingredientList.toArray(ingredients);
+                            Intent recipeIntent = new Intent(getApplicationContext(), RecipeActivity.class)
+                                    .putExtra("ingredients", ingredients);
+
+                            startActivity(recipeIntent);
                         }
                     }.execute(bitmap);
-
-                    // Create intent for the recipe activity
-                    String[] ingredients = new String[ingredientList.size()];
-                    ingredients = ingredientList.toArray(ingredients);
-                    Intent recipeIntent = new Intent(this, RecipeActivity.class)
-                            .putExtra("ingredients", ingredients);
-
-                    startActivity(recipeIntent);
 
                 } catch (FileNotFoundException e) {
                     Log.e(LOG_TAG, e.getMessage());
