@@ -18,37 +18,37 @@ import java.util.ArrayList;
 public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
     private Context mContext;
-    private ArrayList<Recipe> mRecipes;
 
     public RecipeAdapter(Context context, ArrayList<Recipe> recipes) {
         super(context, 0, recipes);
         mContext = context;
-        mRecipes = new ArrayList<Recipe>(recipes);
     }
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
 
-
+        Recipe recipeItem = getItem(position);
         ViewHolder viewHolder;
 
         if (v == null) {
-            LayoutInflater inflater =
-                    (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.list_item_recipe, null);
+            v = LayoutInflater.from(getContext()).inflate(
+                    R.layout.list_item_recipe, parent, false);
+
             // cache view fields into holder
             viewHolder = new ViewHolder();
             viewHolder.recipeImageView = (ImageView) v.findViewById(R.id.recipe_image);
             viewHolder.recipeTitleView =  (TextView) v.findViewById(R.id.recipe_title);
+            v.setTag(viewHolder);
         } else {
             // view already exists
-            viewHolder = (ViewHolder) v.getTag();
+            viewHolder =  (ViewHolder) v.getTag();
         }
 
-        viewHolder.recipeTitleView.setText(mRecipes.get(position).title);
+        viewHolder.recipeTitleView.setText(recipeItem.title);
         Picasso.with(getContext())
-                .load(mRecipes.get(position).image)
+                .load(recipeItem.image)
                 .into(viewHolder.recipeImageView);
+
 
         return v;
     }

@@ -51,7 +51,7 @@ public class RecipeActivityFragment extends Fragment {
         if (intent != null && intent.hasExtra("ingredients")) {
             ingredients = intent.getStringArrayExtra("ingredients");
         }
-        return inflater.inflate(R.layout.fragment_recipe, container, false);
+        return rootView;
     }
 
     @Override
@@ -121,17 +121,20 @@ public class RecipeActivityFragment extends Fragment {
                 String sort = "r"; //sort based off of rating
                 //build the ingredient search query
                 StringBuilder ingredientsStrBuilder = new StringBuilder();
-                for (String ingredient : ingredients) {
-                    ingredientsStrBuilder.append(ingredient + ",");
-                }
-                ingredientsStrBuilder.deleteCharAt(ingredientsStrBuilder.length() - 1);
-                String ingredientQuery = ingredientsStrBuilder.toString();
-
+//                for (String ingredient : ingredients) {
+//                    ingredientsStrBuilder.append(ingredient + ",");
+//                }
+//                ingredientsStrBuilder.deleteCharAt(ingredientsStrBuilder.length() - 1);
+//                String ingredientQuery = ingredientsStrBuilder.toString();
+                String ingredientQuery = ingredients[0] + "," + ingredients[1] + "," + ingredients[2];
+                Log.e(LOG_TAG, ingredientQuery);
                 Uri builtUri = Uri.parse(FOOD2FORK_BASE_URL).buildUpon()
                         .appendQueryParameter(API_PARAM, BuildConfig.FOOD2FORK_API_KEY)
                         .appendQueryParameter(SEARCH_PARAM, ingredientQuery)
                         .appendQueryParameter(SORT_PARAM, sort)
                         .build();
+
+                Log.e(LOG_TAG, builtUri.toString());
 
                 URL url = new URL(builtUri.toString());
                 //create request to the recipe api and open connection
