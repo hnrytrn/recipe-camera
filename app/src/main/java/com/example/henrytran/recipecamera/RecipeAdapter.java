@@ -25,32 +25,33 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
     }
 
     @Override
-    public View getView(int position, View v, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         Recipe recipeItem = getItem(position);
         ViewHolder viewHolder;
 
-        if (v == null) {
-            v = LayoutInflater.from(getContext()).inflate(
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.list_item_recipe, parent, false);
 
             // cache view fields into holder
             viewHolder = new ViewHolder();
-            viewHolder.recipeImageView = (ImageView) v.findViewById(R.id.recipe_image);
-            viewHolder.recipeTitleView =  (TextView) v.findViewById(R.id.recipe_title);
-            v.setTag(viewHolder);
+            viewHolder.recipeImageView = (ImageView) convertView.findViewById(R.id.recipe_image);
+            viewHolder.recipeTitleView =  (TextView) convertView.findViewById(R.id.recipe_title);
+            convertView.setTag(viewHolder);
         } else {
             // view already exists
-            viewHolder =  (ViewHolder) v.getTag();
+            viewHolder =  (ViewHolder) convertView.getTag();
         }
 
         viewHolder.recipeTitleView.setText(recipeItem.title);
         Picasso.with(getContext())
                 .load(recipeItem.image)
+                .resize(500, 500)
                 .into(viewHolder.recipeImageView);
 
 
-        return v;
+        return convertView;
     }
 
     /**

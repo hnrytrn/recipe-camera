@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,6 +46,17 @@ public class RecipeActivityFragment extends Fragment {
         //set recipe adapter to list view
         ListView listView = (ListView)  rootView.findViewById(R.id.listview_recipe);
         listView.setAdapter(mRecipeAdapter);
+        // Start detail activity for the recipe clicked
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Recipe recipe = mRecipeAdapter.getItem(position);
+
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra("recipeTag", recipe);
+                startActivity(detailIntent);
+            }
+        });
 
         // Get the ingredients list from the intent
         Intent intent = getActivity().getIntent();
@@ -58,6 +70,9 @@ public class RecipeActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadRecipes();
+        if (mRecipeAdapter.isEmpty()) {
+            Toast.makeText(getContext(), "No recipes found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadRecipes() {
