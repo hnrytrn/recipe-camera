@@ -86,6 +86,8 @@ public class DetailActivity extends AppCompatActivity {
                 getRecipeFromJson(recipeJsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
+            } catch (JSONException e) {
+                e.printStackTrace();
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();

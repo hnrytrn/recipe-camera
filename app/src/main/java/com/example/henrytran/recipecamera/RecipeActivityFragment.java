@@ -70,11 +70,15 @@ public class RecipeActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadRecipes();
-        if (mRecipeAdapter.isEmpty()) {
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if  (mRecipeAdapter.isEmpty()) {
             Toast.makeText(getContext(), "No recipes found", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void loadRecipes() {
         if (ingredients.length == 0) {
             //No ingredients found in picture
