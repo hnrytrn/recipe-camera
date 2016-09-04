@@ -53,7 +53,7 @@ public class RecipeActivityFragment extends Fragment {
                 Recipe recipe = mRecipeAdapter.getItem(position);
 
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra("recipeTag", recipe);
+                        .putExtra("recipeTag", recipe.id);
                 startActivity(detailIntent);
             }
         });
@@ -174,18 +174,18 @@ public class RecipeActivityFragment extends Fragment {
                 }
                 recipesJsonStr = buffer.toString();
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Error", e);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
+                    Log.e(LOG_TAG, "Error", e);
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
                     }
-                }
+                    if (reader != null) {
+                        try {
+                            reader.close();
+                        } catch (final IOException e) {
+                            Log.e(LOG_TAG, "Error closing stream", e);
+                        }
+                    }
             }
 
             try {
