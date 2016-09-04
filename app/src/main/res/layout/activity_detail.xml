@@ -14,16 +14,13 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="32dp"
-            android:textStyle="bold"
-            android:text="Apple Pie"
-            />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/detail_recipe_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_gravity="center" />
 
         <ListView
             android:id="@+id/detail_recipe_listview"
@@ -33,10 +30,9 @@
 
         <TextView
             android:id="@+id/detail_recipe_directions"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Click here for full directions."/>
+            android:gravity="center" />
 
     </LinearLayout>
 

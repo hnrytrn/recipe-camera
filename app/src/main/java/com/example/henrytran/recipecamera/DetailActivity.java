@@ -5,9 +5,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,11 +29,18 @@ import java.net.URL;
 public class DetailActivity extends AppCompatActivity {
 
     String rId;
+    static ArrayAdapter<String> ingredientsAdapter;
+    String[] ingredientsArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        // Set ingredients list adapter to the list view
+        ingredientsAdapter = new ArrayAdapter<String>(this, R.layout.list_item_ingredients);
+        ListView listView = (ListView) findViewById(R.id.detail_recipe_listview);
+        listView.setAdapter(ingredientsAdapter);
 
         // Get the recipe id from the intent sent
         Intent intent = getIntent();
@@ -32,12 +49,46 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FetchDetailRecipeTask fetchDetailRecipeTask = new FetchDetailRecipeTask();
+        fetchDetailRecipeTask.execute(rId);
+    }
+
     private class FetchDetailRecipeTask extends AsyncTask<String, Void, Void> {
         final String LOG_TAG = FetchDetailRecipeTask.class.getSimpleName();
 
-        private void getRecipeFromJson(String RecipeJsonStr)
+        String source;
+        String title;
+        String image;
+        private void getRecipeFromJson(String recipeJsonStr)
             throws JSONException {
 
+            // Information that needs to be retrieved
+            final String RECIPE = "recipe";
+            final String INGREDIENTS = "ingredients";
+            final String SOURCE = "source_url";
+            final String TITLE = "title";
+            final String IMAGE = "image_url";
+
+            // Parse through JSON
+            JSONObject jsonObj= new JSONObject(recipeJsonStr);
+            JSONObject recipeJson = jsonObj.getJSONObject(RECIPE);
+
+            JSONArray ingredientsJson = recipeJson.getJSONArray(INGREDIENTS);
+            // Copy Json array to ingredients array
+            int ingLength = ingredientsJson.length();
+            String[] arr = new String[ingLength];
+            for (int i = 0; i < ingLength; i++) {
+                arr[i] = ingredientsJson.getString(i);
+            }
+
+            ingredientsArray = arr.clone();
+
+            source = recipeJson.getString(SOURCE);
+            title = recipeJson.getString(TITLE);
+            image = recipeJson.getString(IMAGE);
         }
 
         @Override
@@ -102,6 +153,27 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            TextView titleText = (TextView) findViewById(R.id.detail_recipe_title);
+            ImageView imageView = (ImageView) findViewById(R.id.detail_recipe_image);
+            TextView sourceText = (TextView) findViewById(R.id.detail_recipe_directions);
+
+            // Set text and image for the recipe
+            titleText.setText(title);
+            Picasso.with(getApplicationContext())
+                    .load(image)
+                    .into(imageView);
+            ingredientsAdapter.addAll(ingredientsArray);
+
+
+            // Set source text as a hyperlink to the recipe
+            sourceText.setClickable(true);
+            sourceText.setMovementMethod(LinkMovementMethod.getInstance());
+            String text = "<a href='" + image + "'> Click here for directions </a>";
+            sourceText.setText(Html.fromHtml(text));
         }
     }
 }
