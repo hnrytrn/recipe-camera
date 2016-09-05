@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,7 +109,8 @@ public class RecipeActivityFragment extends Fragment {
             for (int i = 0; i < recipesLength; i++) {
                 JSONObject recipe = recipesJson.getJSONObject(i);
 
-                String title = recipe.getString(TITLE);
+                //decode html string for title
+                String title = Html.fromHtml(recipe.getString(TITLE)).toString();
                 String id = recipe.getString(ID);
                 String image = recipe.getString(IMAGE);
 
@@ -146,7 +148,6 @@ public class RecipeActivityFragment extends Fragment {
                         .appendQueryParameter(SORT_PARAM, sort)
                         .build();
 
-                Log.e(LOG_TAG, builtUri.toString());
 
                 URL url = new URL(builtUri.toString());
                 //create request to the recipe api and open connection

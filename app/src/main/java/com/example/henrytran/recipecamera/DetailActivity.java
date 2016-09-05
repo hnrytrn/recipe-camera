@@ -83,8 +83,9 @@ public class DetailActivity extends AppCompatActivity {
             // Copy Json array to ingredients list
             int ingLength = ingredientsJson.length();
             for (int i = 0; i < ingLength; i++) {
-                Log.e(LOG_TAG, ingredientsJson.getString(i));
-                ingredientsList.add(i, ingredientsJson.getString(i));
+                //decide ingredients html string
+                String ingStr = Html.fromHtml(ingredientsJson.getString(i)).toString();
+                ingredientsList.add(i, ingStr);
             }
 
             source = recipeJson.getString(SOURCE);
@@ -113,7 +114,6 @@ public class DetailActivity extends AppCompatActivity {
                         .appendQueryParameter(ID_PARAM, rId[0])
                         .build();
                 URL url = new URL(builtUri.toString());
-                Log.e(LOG_TAG, builtUri.toString());
                 //connect to recipe API and open connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
