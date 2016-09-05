@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/detail_recipe_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/detail_recipe_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="32dp"
-            android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/detail_recipe_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
-        <ImageView
-            android:id="@+id/detail_recipe_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/detail_recipe_directions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:gravity="center" />
 
-        <ListView
-            android:id="@+id/detail_recipe_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="@string/ingredients"/>
 
-        <TextView
-            android:id="@+id/detail_recipe_directions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" />
+    <ListView
+        android:id="@+id/detail_recipe_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
 
-    </LinearLayout>
 
-</ScrollView>
+</LinearLayout>
+

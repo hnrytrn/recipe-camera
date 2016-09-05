@@ -166,6 +166,7 @@ public class DetailActivity extends AppCompatActivity {
             titleText.setText(title);
             Picasso.with(getApplicationContext())
                     .load(image)
+                    .resize(750,750)
                     .into(imageView);
             ingredientsAdapter.addAll(ingredientsList);
 
@@ -173,7 +174,7 @@ public class DetailActivity extends AppCompatActivity {
             // Set source text as a hyperlink to the recipe
             sourceText.setClickable(true);
             sourceText.setMovementMethod(LinkMovementMethod.getInstance());
-            String text = "<a href='" + image + "'> Click here for directions </a>";
+            String text = "<a href='" + source + "'> Click here for directions </a>";
             sourceText.setText(Html.fromHtml(text));
         }
     }

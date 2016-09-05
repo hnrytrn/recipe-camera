@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 public class RecipeActivityFragment extends Fragment {
 
-    private String[] ingredients;
+    private static String[] ingredients;
     private static RecipeAdapter mRecipeAdapter;
 
     public RecipeActivityFragment() {

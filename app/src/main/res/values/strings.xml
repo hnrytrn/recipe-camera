@@ -2,5 +2,6 @@
     <string name="app_name">Recipe Camera</string>
     <string name="title_activity_recipe">RecipeActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="ingredients">Ingredients</string>
 
 </resources>
