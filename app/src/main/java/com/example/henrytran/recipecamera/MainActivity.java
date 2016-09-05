@@ -68,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
                         protected void onPostExecute (RecognitionResult result) {
                             //add the recognized ingredients to the ingredients list
                             for (Tag tag : result.getTags()) {
-                                ingredientList.add(tag.getName());
+                                //add ingredient if the probability of the tag is greater than 90%
+                                if (tag.getProbability() > 0.9) {
+                                    ingredientList.add(tag.getName());
+                                }
                             }
 
                             // Create intent for the recipe activity
