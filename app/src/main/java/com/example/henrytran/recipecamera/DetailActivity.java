@@ -25,17 +25,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
     String rId;
     static ArrayAdapter<String> ingredientsAdapter;
-    String[] ingredientsArray;
+    ArrayList<String> ingredientsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        ingredientsList = new ArrayList<String>();
 
         // Set ingredients list adapter to the list view
         ingredientsAdapter = new ArrayAdapter<String>(this, R.layout.list_item_ingredients);
@@ -75,16 +78,14 @@ public class DetailActivity extends AppCompatActivity {
             // Parse through JSON
             JSONObject jsonObj= new JSONObject(recipeJsonStr);
             JSONObject recipeJson = jsonObj.getJSONObject(RECIPE);
-
             JSONArray ingredientsJson = recipeJson.getJSONArray(INGREDIENTS);
-            // Copy Json array to ingredients array
-            int ingLength = ingredientsJson.length();
-            String[] arr = new String[ingLength];
-            for (int i = 0; i < ingLength; i++) {
-                arr[i] = ingredientsJson.getString(i);
-            }
 
-            ingredientsArray = arr.clone();
+            // Copy Json array to ingredients list
+            int ingLength = ingredientsJson.length();
+            for (int i = 0; i < ingLength; i++) {
+                Log.e(LOG_TAG, ingredientsJson.getString(i));
+                ingredientsList.add(i, ingredientsJson.getString(i));
+            }
 
             source = recipeJson.getString(SOURCE);
             title = recipeJson.getString(TITLE);
@@ -105,14 +106,14 @@ public class DetailActivity extends AppCompatActivity {
                 //build base URL to fetch recipe
                 final String RECIPE_BASE_URL = "http://food2fork.com/api/get";
                 final String API_PARAM = "key";
-                final String ID_PARAM = "rid";
+                final String ID_PARAM = "rId";
 
                 Uri builtUri = Uri.parse(RECIPE_BASE_URL).buildUpon()
                         .appendQueryParameter(API_PARAM, BuildConfig.FOOD2FORK_API_KEY)
                         .appendQueryParameter(ID_PARAM, rId[0])
                         .build();
                 URL url = new URL(builtUri.toString());
-
+                Log.e(LOG_TAG, builtUri.toString());
                 //connect to recipe API and open connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -166,7 +167,7 @@ public class DetailActivity extends AppCompatActivity {
             Picasso.with(getApplicationContext())
                     .load(image)
                     .into(imageView);
-            ingredientsAdapter.addAll(ingredientsArray);
+            ingredientsAdapter.addAll(ingredientsList);
 
 
             // Set source text as a hyperlink to the recipe

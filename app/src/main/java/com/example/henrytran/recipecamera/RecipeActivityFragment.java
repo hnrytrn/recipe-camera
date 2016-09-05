@@ -139,7 +139,7 @@ public class RecipeActivityFragment extends Fragment {
 //                ingredientsStrBuilder.deleteCharAt(ingredientsStrBuilder.length() - 1);
 //                String ingredientQuery = ingredientsStrBuilder.toString();
                 String ingredientQuery = ingredients[0] + "," + ingredients[1] + "," + ingredients[2];
-                Log.e(LOG_TAG, ingredientQuery);
+
                 Uri builtUri = Uri.parse(FOOD2FORK_BASE_URL).buildUpon()
                         .appendQueryParameter(API_PARAM, BuildConfig.FOOD2FORK_API_KEY)
                         .appendQueryParameter(SEARCH_PARAM, ingredientQuery)
